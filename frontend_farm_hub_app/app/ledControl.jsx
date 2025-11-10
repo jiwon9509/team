@@ -97,7 +97,7 @@ const ledControl = () => {
 
     try {
       // LED 제어 API 호출 (Python 서버에 해당 엔드포인트 추가 필요)
-      const action = newState ? "on" : "off";
+      const action = newState ? "ON" : "OFF";
       console.log(`LED ${action} 요청 중...`);
 
       // 임시로 상태만 변경 (실제 API 연동 시 주석 해제)

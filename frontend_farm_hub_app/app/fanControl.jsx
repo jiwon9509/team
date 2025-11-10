@@ -104,8 +104,10 @@ const fanControl = () => {
     try {
       console.log(`팬 모드 변경: ${mode}`);
 
-      // 팬 제어 API 호출
-      const response = await axios.post(`${PYTHON_URL}/fanControl/${mode}`);
+      // 팬 제어 API 호출 - Flask 서버가 기대하는 대문자 형식으로 변환
+      const apiMode =
+        mode === "ventilator" ? "AIR" : mode === "fan" ? "FAN" : "OFF";
+      const response = await axios.post(`${PYTHON_URL}/fanControl/${apiMode}`);
       console.log("팬 제어 성공:", response.data);
 
       // 상태 업데이트
@@ -117,12 +119,15 @@ const fanControl = () => {
         lastUpdate: new Date().toLocaleTimeString(),
       }));
 
-      const modeText = mode === "off" ? "정지" : mode === "ventilator" ? "환풍기 모드" : "선풍기 모드";
-      Alert.alert(
-        "팬 제어",
-        `환기 팬이 ${modeText}로 변경되었습니다.`,
-        [{ text: "확인" }]
-      );
+      const modeText =
+        mode === "off"
+          ? "정지"
+          : mode === "ventilator"
+          ? "환풍기 모드"
+          : "선풍기 모드";
+      Alert.alert("팬 제어", `환기 팬이 ${modeText}로 변경되었습니다.`, [
+        { text: "확인" },
+      ]);
     } catch (error) {
       console.log("팬 제어 에러:", error);
       Alert.alert("오류", "팬 제어에 실패했습니다.", [{ text: "확인" }]);
@@ -319,7 +324,8 @@ const fanControl = () => {
                   style={[
                     styles.fanModeButtonText,
                     fanMode === "ventilator" && styles.fanModeButtonTextActive,
-                    fanStatus.mode === "auto" && styles.fanModeButtonTextDisabled,
+                    fanStatus.mode === "auto" &&
+                      styles.fanModeButtonTextDisabled,
                   ]}
                 >
                   환풍기
@@ -339,7 +345,8 @@ const fanControl = () => {
                   style={[
                     styles.fanModeButtonText,
                     fanMode === "off" && styles.fanModeButtonTextActive,
-                    fanStatus.mode === "auto" && styles.fanModeButtonTextDisabled,
+                    fanStatus.mode === "auto" &&
+                      styles.fanModeButtonTextDisabled,
                   ]}
                 >
                   OFF
@@ -359,7 +366,8 @@ const fanControl = () => {
                   style={[
                     styles.fanModeButtonText,
                     fanMode === "fan" && styles.fanModeButtonTextActive,
-                    fanStatus.mode === "auto" && styles.fanModeButtonTextDisabled,
+                    fanStatus.mode === "auto" &&
+                      styles.fanModeButtonTextDisabled,
                   ]}
                 >
                   선풍기
